@@ -8,8 +8,8 @@ Teachers:
 
 **Luca Tornatore**, INAF - National Institute for Astrophysics, Astronomical Observatory of Trieste
 
-Lab session are helped by: Federico Barone, Area Science Park, Trieste
-
+Lab session are helped by: Ruggero Lot, Area Science Park  and Andrea Recchia, CNR/IOM
+ 
 
 
 #### CALENDAR
@@ -17,13 +17,13 @@ Lab session are helped by: Federico Barone, Area Science Park, Trieste
 | DATE         | LECTURES                                      | TUTORIALS                                                           |
 | :----------  | :---------------------------------------------| :---------------------------------------------                      |
 | Mon, Oct 3   | [0] [Introduction to the course](./intro_to_course_2022.pdf)/[introduction to ssh](Basic/0_ssh101.pdf)  |           |
-| Thu, Oct 7   |                  |   [Tutorial 0: using the linux command line](Basic/README.md)          | 
-| Fri, Oct 8   |                  |   [Tutorial 0: using the linux command line](Basic//README.md)          |
+| Thu, Oct 7   |                  |  [0] [Tutorial 0: using the linux command line](Basic/README.md)          | 
+| Fri, Oct 8   |                  |   [0] [Tutorial 0: using the linux command line](Basic/README.md)          |
 | Mon, Oct 10  | [1] [Introduction to HPC](Basic/Intro/README.md)          |                                     |                           
 | Tue, Oct 11  | [2] [HPC Hardware  ](Basic/Intro/README.md)  |                                     |
 | Wed, Oct 12  | [3] [HPC software stack and tools](Basic/Intro/README.md) |                    | 
-| Thu, Oct 13  |                              |   [Tutorial 1: submit your jobs on ORFEO ](Intro/README.md)       |
-| Fri, Oct 14  |                              |   [Tutorial 2: use the HPC software on ORFEO ](Intro/README.md)   | 
+| Thu, Oct 13  |                              |  [1] [Tutorial 1: submit your jobs on ORFEO](Intro/README.md)       |
+| Fri, Oct 14  |                              |  [1] [Tutorial 2: use the HPC software on ORFEO](Intro/README.md)   | 
 
 
 
