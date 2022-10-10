@@ -10,6 +10,9 @@ Teachers:
 
 Lab session are helped by: Ruggero Lot, Area Science Park  and Andrea Recchia, CNR/IOM
  
+Link to the teams channel:
+
+https://teams.microsoft.com/l/team/19%3abFAckI3P3K6wCmSxl5_mCW0uF1tFNGfEPA25R02ZX_01%40thread.tacv2/conversations?groupId=1563cf8b-1804-4990-81df-86b4553edf1a&tenantId=a54b3635-128c-460f-b967-6ded8df82e75
 
 
 #### CALENDAR
