@@ -24,7 +24,7 @@ Let's start talking about HPC in present and future days
  - [what can we do with an exascale machine](https://www.hpe.com/us/en/insights/articles/whats-with-the-18-zeros-2009.html)
  - [the www.top500.org: it deserves a visit to check a few things](https://www.top500.org)
  - [Folding@home project: take a look](https://foldingathome.org/?lng=en)
- - [AlphaFold web page](
+ - [AlphaFold web page](https://alphafold.com/)
  
 
 ## Day 2:  HPC hardware  
