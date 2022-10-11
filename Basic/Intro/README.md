@@ -5,7 +5,7 @@ date: Monday 10/10/2022
 
 ### lectures
  
- - Stefano Cozzini : [introduction to HPC](lecture01-intro-to-HPC.pdf)
+ - Stefano Cozzini : [introduction to HPC](lecture01-intro-toHPC.pdf)
 
 Let's start talking about HPC in present and future days
 
