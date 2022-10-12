@@ -120,9 +120,15 @@ OLDPWD=/large
 The most important one:
 
 ``` 
+[cozzini@login02 ~]$ env | grep PATH
+__LMOD_REF_COUNT_MODULEPATH=/opt/area/shared/modules/contribs:1;/opt/area/shared/modules/libraries:1;/opt/area/shared/modules/compilers:1;/opt/area/shared/modules/utilities:1;/opt/area/shared/modules/environments:1;/opt/area/shared/modules/testing:1;/opt/area/shared/modules/applications:1;/opt/area/shared/modules/mpi:1;/etc/modulefiles:1;/usr/share/modulefiles:1;/usr/share/modulefiles/Linux:1;/usr/share/modulefiles/Core:1;/usr/share/lmod/lmod/modulefiles/Core:1
+MANPATH=/usr/share/lmod/lmod/share/man:
+MODULEPATH_ROOT=/usr/share/modulefiles
+PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/u/area/cozzini/.local/bin:/u/area/cozzini/bin
+MODULEPATH=/opt/area/shared/modules/contribs:/opt/area/shared/modules/libraries:/opt/area/shared/modules/compilers:/opt/area/shared/modules/utilities:/opt/area/shared/modules/environments:/opt/area/shared/modules/testing:/opt/area/shared/modules/applications:/opt/area/shared/modules/mpi:/etc/modulefiles:/usr/share/modulefiles:/usr/share/modulefiles/Linux:/usr/share/modulefiles/Core:/usr/share/lmod/lmod/modulefiles/Core
+[cozzini@login02 ~]$
+``` 
 
-- show environment variables 
-- show how to setup a enviroment variable
 
 ## storage systems 
 
@@ -144,7 +150,6 @@ Filesystem           Size  Used Avail Use% Mounted on
 10.128.2.231:/large  555T  308T  248T  56% /large
 
 ```
-
 
 
 ## use module 
