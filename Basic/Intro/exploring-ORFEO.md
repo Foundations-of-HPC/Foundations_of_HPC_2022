@@ -171,6 +171,10 @@ $ module load
 $ ldd executable_file_name
 + ldd to see executable files dependencies
 
+## Show processors info
+$ cat proc/cpuinfo
+$ cat proc/cpuinfo | grep processor
+
 
 ## Using SLURM local resource manager system 
 
