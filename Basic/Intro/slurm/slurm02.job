@@ -1,0 +1,8 @@
+#!/bin/bash
+#SBATCH -n3 # 3 tasks
+echo Starting job $SLURM_JOB_ID
+echo SLURM assigned me these nodes
+srun -l hostname
+srun --exclusive -n2 sleep 30  & # start 2 copies of program 1
+srun --exclusive -n1 sleep 30  & # start 1 copy of program 2
+wait # wait for all to finish
