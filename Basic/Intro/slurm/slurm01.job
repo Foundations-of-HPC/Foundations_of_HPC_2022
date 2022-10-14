@@ -1,0 +1,21 @@
+#!/bin/bash
+# Name of the job
+#SBATCH -J my_first_job  
+# Partition to use - FHPC
+#SBATCH -p FHPC
+# Time limit. Often not needed as there are defaults, 
+# but you might have to specify it to get the maximum allowed.
+# time: 30 seconds  
+#SBATCH --time=30 
+# Pick nodes with feature 'foo'. Different clusters have 
+# different features available
+# but most of the time you don't need this
+##SBATCH -C foo
+# Restrict the job to run on the node(s) named
+##SBATCH -w epyc008
+# Number of processes
+#SBATCH -n66
+#Start the program
+srun /bin/hostname
+srun sleep 60
+
