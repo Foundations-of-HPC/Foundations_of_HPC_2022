@@ -60,9 +60,6 @@
 #endif
 #include <sys/resource.h>
 
-#define STACKSMASH  (8*1024*1024)  // <<--- set this to the number of bytes
-				   // needed to smash the stack limit
-
 
 void func1(unsigned int S)
 /*
@@ -162,19 +159,18 @@ int main(int argc, char **argv)
 	     "I'll use the current soft stack limit of %u\n(hard limit is set to %d)\n",
 	     S, (int)stack_limits.rlim_max);
     }
-
-
   printf("\n");
   
   // call func1, it dynamically allocates in the heap
-  func1(STACKSMASH);
+  func1(S);
 
   
   // call func2, it statically allocates in the stack
-  func2(S);           //  <<----  THAT WILL FAIL if STACKSMASH is too large
+  func2(S);           //  <<----  THAT WILL FAIL if S is too large
 
+  
   // call func3, it dynamically allocates in the stack
-  func3(STACKSMASH);  //  <<----  THAT WILL FAIL if STACKSMASH is too large
+  func3(S);           //  <<----  THAT WILL FAIL if STACKSMASH is too large
                       //          but probably you won't notice it because of
                       //          the segfault raised in the previous function
 

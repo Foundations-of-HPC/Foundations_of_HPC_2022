@@ -1,0 +1,58 @@
+#!/bin/bash
+
+declare compilers=('gcc' 'icc' 'pgi')
+
+first=0
+for C in ${compilers[@]};
+do
+    if [ -f $C/timings ];
+    then
+	if [[ first -eq 0 ]];
+	then
+	    echo "creating from "$C/timings
+	    first=1;
+	    cat $C/timings > timings_;
+	else
+	    echo "joining "$C/timings
+	    join timings_ $C/timings > timings__
+	    mv -f timings__ timings_
+	fi
+    else
+	echo $C/timings " does not exist"
+    fi
+done
+
+echo -e -n "#\t" > header
+for C in ${compilers[@]};
+do
+    if [ -f $C/timings ]; then
+	echo -e -n $C"\t\t" >> header; fi
+done
+echo >> header
+echo "# for each compiler: non-optimized optimized" >> header
+echo "#" >> header
+
+cat header timings_ > timings
+rm -f header
+
+
+
+
+
+# echo -e "#\n#\n#" > table
+# line=$(cat gcc/timings)
+# echo -e "gcc\t"${line} >> table
+# line=$(cat icc/timings)
+# echo -e "icc\t"${line} >> table
+# line=$(cat pgi/timings)
+# echo -e "pgi\t"${line} >> table
+# echo >> table
+# echo >> table
+# line=$(cat gcc/timings.O)
+# echo -e "gcc\t"${line} >> table
+# line=$(cat icc/timings.O)
+# echo -e "icc\t"${line} >> table
+# line=$(cat pgi/timings.O)
+# echo -e "pgi\t"${line} >> table
+
+

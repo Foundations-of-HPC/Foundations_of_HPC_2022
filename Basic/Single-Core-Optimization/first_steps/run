@@ -1,0 +1,38 @@
+#!/bin/bash
+
+Np=200
+Ng=10
+
+rm -f timings 
+v=()
+timing=()
+
+declare compilers=('gcc' 'pgi' 'icc')
+
+for C in ${compilers[@]};
+do
+    echo "entering folder "$C
+    cd $C
+    
+    for f in loop.?;
+    do    
+	version=$( echo $f | cut -d'.' -f2 )
+	v+=($version)
+	echo "running v"${version} $Np $Ng
+	timing+=($(./$f $Np $Ng | gawk '{if($1=="LOOP") print $4" "}'))
+    done
+    
+    i=0
+    for f in loop.?.O;
+    do
+	version=$( echo $f | cut -d'.' -f2 )
+	echo "running optimized v"${version} $Np $Ng
+	timingO=$(./$f $Np $Ng | gawk '{if($1=="LOOP") print $4" "}')
+	
+	echo -e ${v[$i]}"\t"${timing[$i]}"\t"$timingO >> timings
+	i=$(($i+1))
+    done
+
+    cd ../
+done
+

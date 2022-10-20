@@ -1,0 +1,22 @@
+#!/bin/bash
+
+for f in loop.?.c;
+do
+    version=$( echo $f | cut -d'.' -f2)
+    echo $f
+
+    echo -e "\tgcc"
+    gcc -std=c11 -o gcc/loop.${version} loop.${version}.c -lm
+    gcc -std=c11 -O3 -march=native -o gcc/loop.${version}.O loop.${version}.c -lm
+
+    echo -e "\ticc"
+    icc -std=c11 -o icc/loop.${version} loop.${version}.c -lm
+    icc -std=c11 -O3 -Ofast -o icc/loop.${version}.O loop.${version}.c -lm
+
+    echo -e "\tpgi"    
+    pgcc -c11 -o pgi/loop.${version} loop.${version}.c -lm
+    pgcc -c11 -O4 -fast -o pgi/loop.${version}.O loop.${version}.c -lm
+
+    
+    
+done

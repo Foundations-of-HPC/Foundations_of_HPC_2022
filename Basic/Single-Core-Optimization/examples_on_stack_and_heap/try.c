@@ -63,6 +63,28 @@ int main ( int argc, char **argv )
 
     }
 
+ #define N 4
+  
+  int i;
+  int *iarray;
+
+  double d;
+  double *darray;
+
+  iarray = (int*)malloc( N*sizeof(int) );
+  darray = (double*)malloc ( N*sizeof(double) );
+
+  printf("\n\n");
+  
+  for ( int j = 0; j < N; j++ )
+    printf ( "element %d of int array lives at %p %p"
+	     " - it lives at %ld positions from the beginning of the int array\n\n",
+	     j, iarray+j, &iarray[j],
+	     &iarray[j] - &iarray[0]);
+  
+
+  free(darray);
+  free(iarray);
   
   return 0;
 }
