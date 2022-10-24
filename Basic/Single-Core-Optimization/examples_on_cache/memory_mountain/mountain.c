@@ -11,11 +11,10 @@
 #define MAXSTRIDE 15        /* Stride x8 bytes */
 #define MAXELEMS MAXBYTES/sizeof(long) 
 
-/* $begin mountainfuns */
+
 long data[MAXELEMS];      /* The global array we'll be traversing */
 
-/* $end mountainfuns */
-/* $end mountainmain */
+
 void init_data(long *data, int n);
 int test(int elems, int stride);
 double run(int size, int stride, double Mhz);

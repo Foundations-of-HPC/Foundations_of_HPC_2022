@@ -22,8 +22,8 @@ SUFFIX = .pgcc
 LIBM = -lm
 endif
 
-mountain: mountain.c fcyc.c
-	$(CC) $(CFLAGS) -o mountain$(SUFFIX) mountain.c fcyc.c $(LIBM)
+mountain: mountain.c fcyc2.c
+	$(CC) $(CFLAGS) -o mountain$(SUFFIX) mountain.c fcyc2.c $(LIBM)
 
 clean:
 	rm -f mountain$(SUFFIX) *.o *~

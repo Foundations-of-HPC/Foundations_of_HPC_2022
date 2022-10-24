@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#include "fcyc.h"
+#include "fcyc2.h"
 
 #define CPU_TIME ({struct timespec ts; clock_gettime( CLOCK_PROCESS_CPUTIME_ID, &ts ), \
 					 (double)ts.tv_sec + (double)ts.tv_nsec * 1e-9;})
@@ -85,9 +85,7 @@ int has_converged(int k_arg, double epsilon_arg, int maxsamples)
 }
 
 /* Code to clear cache */
-/* Pentium III has 512K L2 cache, which is 128K ints */
-#define ASIZE (1 << 17)
-/* Cache block size is 32 bytes */
+#define ASIZE (1 << 20)
 #define STRIDE 8
 static int stuff[ASIZE];
 static int sink;

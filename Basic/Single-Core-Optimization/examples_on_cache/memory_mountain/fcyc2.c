@@ -81,8 +81,7 @@ int has_converged(int k_arg, double epsilon_arg, int maxsamples)
 }
 
 /* Code to clear cache */
-/* Pentium III has 512K L2 cache, which is 128K ints */
-#define ASIZE (1 << 17)
+#define ASIZE (1 << 20)
 /* Cache block size is 32 bytes */
 #define STRIDE 8
 static int stuff[ASIZE];
