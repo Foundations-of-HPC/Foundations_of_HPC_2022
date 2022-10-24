@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "fcyc2.h" /* measurement routines */
-#include "clock.h" /* routines to access the cycle counter */
+#include "fcyc.h"
+
 
 #define MINBYTES (1 << 14)  /* First working set size */
 #define MAXBYTES (1 << 27)  /* Last working set size */
@@ -18,20 +18,16 @@ long data[MAXELEMS];      /* The global array we'll be traversing */
 /* $end mountainmain */
 void init_data(long *data, int n);
 int test(int elems, int stride);
-double run(int size, int stride, double Mhz);
+double run(int size, int stride);
 
 /* $begin mountainmain */
 int main()
 {
     int size;        /* Working set size (in bytes) */
     int stride;      /* Stride (in array elements) */
-    double Mhz;      /* Clock frequency */
 
     init_data(data, MAXELEMS); /* Initialize each element in data */
-    Mhz = mhz(0);              /* Estimate the clock frequency */
 
-
-    printf("# Clock frequency is approx. %.1f MHz\n", Mhz);
     printf("# Memory mountain (MB/sec)\n");
 
     
@@ -48,7 +44,7 @@ int main()
 	printf("%d\t", log2size_kb);
 	
 	for (stride = 1; stride <= MAXSTRIDE; stride++)
-	  printf("%.0f\t", run(size, stride, Mhz));	    
+	  printf("%.0f\t", run(size, stride));	    
 
 	printf("\n");
     }
@@ -71,11 +67,11 @@ void init_data(long *data, int n)
  */
 int test(int elems, int stride)
 {
-	//Note what is calculated outside the loop for performance
     long i, sx2 = stride*2, sx3 = stride*3, sx4 = stride*4;
     long acc0 = 0, acc1 = 0, acc2 = 0, acc3 = 0;
     long length = elems;
     long limit = length - sx4;
+
     /* Combine 4 elements at a time */
     for (i = 0; i < limit; i += sx4) {
 	acc0 = acc0 + data[i];     
@@ -95,14 +91,14 @@ int test(int elems, int stride)
  *       "size" is in bytes, "stride" is in array elements, and Mhz is
  *       CPU clock frequency in Mhz.
  */
-double run(int size, int stride, double Mhz)
+double run(int size, int stride)
 {   
-    double cycles;
+    double timing;
     int elems = size / sizeof(double);       
 
     test(elems, stride);                     /* Warm up the cache */       //line:mem:warmup
-    cycles = fcyc2(test, elems, stride, 0);  /* Call test(elems,stride) */ //line:mem:fcyc
-    return (size / stride) / (cycles / Mhz); /* Convert cycles to MB/s */  //line:mem:bwcompute
+    timing = fcyc2(test, elems, stride, 0);  /* Call test(elems,stride) */ //line:mem:fcyc
+    return (size / stride) / timing; /* Convert cycles to MB/s */  //line:mem:bwcompute
 }
 /* $end mountainfuns */
 
