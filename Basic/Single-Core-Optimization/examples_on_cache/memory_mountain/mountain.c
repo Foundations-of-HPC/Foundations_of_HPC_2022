@@ -29,47 +29,32 @@ int main()
 
     init_data(data, MAXELEMS); /* Initialize each element in data */
     Mhz = mhz(0);              /* Estimate the clock frequency */
-/* $end mountainmain */
-    /* Not shown in the text */
+
+
     printf("# Clock frequency is approx. %.1f MHz\n", Mhz);
     printf("# Memory mountain (MB/sec)\n");
 
     
-    /* LT  <<< ORIGINAL print >>>
-    printf("\t");
-    for (stride = 1; stride <= MAXSTRIDE; stride++)
-	printf("s%d\t", stride);
-    */
     printf("%d\t", MAXSTRIDE);
     for (stride = 1; stride <= MAXSTRIDE; stride++)
       printf("%d\t", stride);
 
     printf("\n");
 
- /* $begin mountainmain */
-    for (size = MAXBYTES; size >= MINBYTES; size >>= 1) {
-/* $end mountainmain */
-      /* Not shown in the text */
-      /* LT  <<< ORIGINAL print >>>
-      if (size > (1 << 20))
-	    printf("%dm\t", size / (1 << 20));
-	else
-	    printf("%dk\t", size / 1024);
-      */
-      /* LT print the log_2 size in units of KB */
-      int log2size_kb = (int)(log2((double)size / 1024.0));
-      printf("%d\t", log2size_kb);
+    /* begin mountainmain */
+    for (size = MAXBYTES; size >= MINBYTES; size >>= 1)
+      {
+	int log2size_kb = (int)(log2((double)size / 1024.0));
+	printf("%d\t", log2size_kb);
+	
+	for (stride = 1; stride <= MAXSTRIDE; stride++)
+	  printf("%.0f\t", run(size, stride, Mhz));	    
 
-/* $begin mountainmain */
-	for (stride = 1; stride <= MAXSTRIDE; stride++) {
-	    printf("%.0f\t", run(size, stride, Mhz));
-	    
-	}
 	printf("\n");
     }
     exit(0);
 }
-/* $end mountainmain */
+
 
 /* init_data - initializes the array */
 void init_data(long *data, int n)
