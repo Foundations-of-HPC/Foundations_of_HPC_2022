@@ -6,6 +6,8 @@
 #include <sys/times.h>
 #include <time.h>
 
+#include "mypapi.h"
+
 
 /*
  * -------------------------------------
@@ -39,7 +41,6 @@ typedef unsigned long long int idx_t;
 
 #define CPU_TIME ({struct timespec ts; clock_gettime( CLOCK_PROCESS_CPUTIME_ID, &ts ), \
 					 (double)ts.tv_sec + (double)ts.tv_nsec * 1e-9;})
-
 
 
 
@@ -100,41 +101,62 @@ int main(int argc, char **argv)
   /*
    * transpose the matrix
    */
+  double timing;
+  PAPI_INIT;
 
-  double timing = CPU_TIME;
-  
-  idx_t row_nblocks = nrows / block_size - (ncols % block_size==0);
-  idx_t row_remind  = (nrows % block_size ? nrows - row_nblocks*block_size : block_size);
-  idx_t col_nblocks = ncols / block_size - (ncols % block_size==0);
-  idx_t col_remind  = (ncols % block_size ? ncols - col_nblocks*block_size : block_size);
-
-
-  for ( idx_t rb = 0; rb <= row_nblocks; rb++ )
+  if ( block_size == 1 )
     {
-      idx_t row_start = rb*block_size;
-      idx_t row_end   = row_start + ( rb < row_nblocks ? block_size : row_remind );
-	
-      for ( idx_t cb = 0; cb <= col_nblocks; cb++ )
+      timing = CPU_TIME;
+      PAPI_START_CNTR;
+      
+      for ( idx_t ri = 0; ri < nrows; ri++ )
 	{
-	  idx_t col_start = cb*block_size;
-	  idx_t col_end   = col_start + ( cb < col_nblocks ? block_size : col_remind );
-
-	  for ( idx_t ri = row_start; ri < row_end; ri++ )
-	    {
-	      idx_t read_offset  = ri*ncols+col_start;
-	      idx_t write_offset = col_start*nrows+ri;
-
-	      for( idx_t ci = col_start; ci < col_end; ci++, write_offset+=nrows )
-		tmatrix[ write_offset ] = matrix[read_offset++];
-
-	    }
-
+	  idx_t row_off = ri*ncols;
+	  for( idx_t ci = 0, col_off = ri ; ci < ncols; ci++, col_off += nrows )
+	    tmatrix[ col_off ] = matrix[ row_off + ci ];
 	}
       
+      PAPI_STOP_CNTR;
+      timing = CPU_TIME - timing;
     }
 
-  timing = CPU_TIME - timing;
+  else
+    {
+  
+      timing = CPU_TIME;
+      PAPI_START_CNTR;
+  
+      idx_t row_nblocks = nrows / block_size - (ncols % block_size==0);
+      idx_t row_remind  = (nrows % block_size ? nrows - row_nblocks*block_size : block_size);
+      idx_t col_nblocks = ncols / block_size - (ncols % block_size==0);
+      idx_t col_remind  = (ncols % block_size ? ncols - col_nblocks*block_size : block_size);
 
+
+      for ( idx_t rb = 0; rb <= row_nblocks; rb++ )
+	{
+	  idx_t row_start = rb*block_size;
+	  idx_t row_end   = row_start + ( rb < row_nblocks ? block_size : row_remind );
+	
+	  for ( idx_t cb = 0; cb <= col_nblocks; cb++ )
+	    {
+	      idx_t col_start = cb*block_size;
+	      idx_t col_end   = col_start + ( cb < col_nblocks ? block_size : col_remind );
+
+	      for ( idx_t ri = row_start; ri < row_end; ri++ )
+		{
+		  idx_t read_offset  = ri*ncols+col_start;
+		  idx_t write_offset = col_start*nrows+ri;
+
+		  for( idx_t ci = col_start; ci < col_end; ci++, write_offset+=nrows )
+		    tmatrix[ write_offset ] = matrix[read_offset++];
+		}
+	    }      
+	}
+      
+      PAPI_STOP_CNTR;
+      timing = CPU_TIME - timing;
+    }
+      
   if ( check )
     {
   
@@ -169,6 +191,28 @@ int main(int argc, char **argv)
   
   printf("transpose time is %g\n", timing );  
 
+ #if defined(USE_PAPI) 
+  uLint N = nrows * ncols;
+  printf( "%25s: %-4.2g\n"
+	  "%25s: %-6.4g\n"
+	  "%25s: %-6.4g\n"
+	  "%25s: %-6.4g\n",
+	  
+	  "IPC",
+	  (double)papi_values[0] / papi_values[1],
+	  
+	  "time-per-element (nsec)",
+	  timing / N * 1e9,
+	  
+	  "cycles-per-element",
+	  (double)papi_values[1] / N,
+	  
+	  "L1miss-per-element",
+	  (double)papi_values[2] / N);
+  
+ #endif
+
+  
   free ( matrix );
   
   return 0;

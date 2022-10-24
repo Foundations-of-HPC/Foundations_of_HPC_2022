@@ -6,6 +6,7 @@
 #include <sys/times.h>
 #include <time.h>
 
+#include "mypapi.h"
 
 /*
  * -------------------------------------
@@ -38,6 +39,26 @@ typedef unsigned long long int idx_t;
 					 (double)ts.tv_sec + (double)ts.tv_nsec * 1e-9;})
 
 
+extern inline void transpose ( int, idx_t, idx_t, data_t **, data_t ** );
+
+inline void transpose ( int mode, idx_t nrows, idx_t ncols, data_t **M, data_t **T )
+{
+  switch ( mode )
+    {
+    case 0: {
+      for ( idx_t i = 0; i < nrows; i++ )
+	for ( idx_t j = 0; j < ncols; j++ )
+	  T[j][i] = M[i][j]; }; break;
+    case 1: {
+      for ( idx_t i = 0; i < nrows; i++ )
+	for ( idx_t j = 0; j < ncols; j++ )
+	  T[i][j] = M[j][i]; }; break;
+    }
+  
+  return; 
+}
+
+
 
 /*
  * -------------------------------------
@@ -61,7 +82,7 @@ int main(int argc, char **argv)
    * allocate the memory
    */
   data_t **matrix  = (data_t**)malloc( (nrows+ncols)*sizeof(data_t*) );    // the original matrix
-  data_t **tmatrix = matrix + nrows;                                 // the transposed matrix
+  data_t **tmatrix = matrix + nrows;                                       // the transposed matrix
 
   /*
    * set-up the pointerd that represent the matrix
@@ -102,42 +123,64 @@ int main(int argc, char **argv)
   /*
    * transpose the matrix
    */
-  
-  idx_t row_nblocks = nrows / block_size - (ncols % block_size==0);                         // how many row-blocks there wiil be
-  idx_t row_remind  = (nrows % block_size ? nrows - row_nblocks*block_size : block_size);   // account for a final block of
-											    //   smaller size
-  
-  idx_t col_nblocks = ncols / block_size - (ncols % block_size==0);                         // how many column-blocks there wiil be
-  idx_t col_remind  = (ncols % block_size ? ncols - col_nblocks*block_size : block_size);   // account for a final block of
-											    //    smaller size
 
-  double timing = CPU_TIME;
+  double timing;
+  PAPI_INIT;
 
-  // actually transpose the matrix
-  //  
-  for ( idx_t rb = 0; rb <= row_nblocks; rb++ )
-    // loop over the blocks along the rows
-    //
+  if ( block_size == 1 )
     {
-      idx_t row_start = rb*block_size;
-      idx_t row_end   = row_start + ( rb < row_nblocks ? block_size : row_remind );
-	
-      for ( idx_t cb = 0; cb <= col_nblocks; cb++ )
-	// loop over the blocks along the columns
+      timing = CPU_TIME;
+      PAPI_START_CNTR;
+      
+      for ( idx_t ri = 0; ri < nrows; ri++ )	    	 
+	for( idx_t ci = 0; ci < ncols; ci++ )
+	  tmatrix [ci][ri] = matrix[ri][ci];
+
+      PAPI_STOP_CNTR;
+      timing = CPU_TIME - timing;
+    }
+  
+  else
+    {
+  
+      idx_t row_nblocks = nrows / block_size - (ncols % block_size==0);                         // how many row-blocks there wiil be
+      idx_t row_remind  = (nrows % block_size ? nrows - row_nblocks*block_size : block_size);   // account for a final block of
+      //   smaller size
+      
+      idx_t col_nblocks = ncols / block_size - (ncols % block_size==0);                         // how many column-blocks there wiil be
+      idx_t col_remind  = (ncols % block_size ? ncols - col_nblocks*block_size : block_size);   // account for a final block of
+      //    smaller size
+      
+      timing = CPU_TIME;
+      
+      PAPI_START_CNTR;
+      // actually transpose the matrix
+      //  
+      for ( idx_t rb = 0; rb <= row_nblocks; rb++ )
+	// loop over the blocks along the rows
 	//
 	{
-	  idx_t col_start = cb*block_size;
-	  idx_t col_end   = col_start + ( cb < col_nblocks ? block_size : col_remind );
-
-	  // transpose the current block
-	  //
-	  for ( idx_t ri = row_start; ri < row_end; ri++ )	    	 
-	    for( idx_t ci = col_start; ci < col_end; ci++ )
-	      tmatrix [ci][ri] = matrix[ri][ci];
-	}      
+	  idx_t row_start = rb*block_size;
+	  idx_t row_end   = row_start +( rb < row_nblocks ? block_size : row_remind );
+	  
+	  for ( idx_t cb = 0; cb <= col_nblocks; cb++ )
+	    // loop over the blocks along the columns
+	    //
+	    {
+	      idx_t col_start = cb*block_size;
+	      idx_t col_end   = col_start + ( cb < col_nblocks ? block_size : col_remind );
+	      
+	      // transpose the current block
+	      // n.b. strided access is in write
+	      for ( idx_t ri = row_start; ri < row_end; ri++ )	    	 
+		for( idx_t ci = col_start; ci < col_end; ci++ )
+		  tmatrix [ci][ri] = matrix[ri][ci];
+	    }      
+	}
+      PAPI_STOP_CNTR;
+      timing = CPU_TIME - timing;
     }
-
-  timing = CPU_TIME - timing;
+  
 
 
   if ( check )
@@ -174,6 +217,28 @@ int main(int argc, char **argv)
     }
   
   printf("transpose time is %g\n", timing );
+
+ #if defined(USE_PAPI)
+  uLint N = nrows * ncols;
+  printf( "%25s: %-4.2g\n"
+	  "%25s: %-6.4g\n"
+	  "%25s: %-6.4g\n"
+	  "%25s: %-6.4g\n",
+	  
+	  "IPC",
+	  (double)papi_values[0] / papi_values[1],
+	  
+	  "time-per-element (nsec)",
+	  timing / N * 1e9,
+	  
+	  "cycles-per-element",
+	  (double)papi_values[1] / N,
+	  
+	  "L1miss-per-element",
+	  (double)papi_values[2] / N);
+  
+ #endif
+
 
   free ( all );
   free ( matrix );
