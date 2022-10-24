@@ -7,9 +7,10 @@ int main( void )
 
   unsigned int i    = 128;
   int          size = sizeof(i);
+  printf("Size of int is %d bytes.\n", size);
 
   /*
-   *  i is and integer variable, and as suche it requires 4 bytes
+   *  i is and integer variable, and as such it requires 4 bytes
    *  let's explore how this 4 bytes are placed in memory
    */  
   
@@ -28,7 +29,7 @@ int main( void )
       //
       char *byte = (char*)&i;
       for( int k = 0; k < size; k++ )
-	printf("\t%p : %d\n", byte+k, *(byte+k) );
+	    printf("\t%p : %d\n", byte+k, *(byte+k) );
 
       // convince yourself that the previous for loop could have been
       // written as follows:
@@ -39,8 +40,8 @@ int main( void )
       
       // why is it so ?
       // -- &i is the address of i; more precisely
-      // it is the address of the begin of i, i.e.
-      // the address of the furst of the bytes that
+      // it is the address of the beginning of i, i.e.
+      // the address of the first of the bytes that
       // form i.
       // -- (char*)&i means that we interpret the
       // address &i as an address to a char

@@ -86,11 +86,11 @@ void init_data(long *data, int n)
  */
 int test(int elems, int stride)
 {
+	//Note what is calculated outside the loop for performance
     long i, sx2 = stride*2, sx3 = stride*3, sx4 = stride*4;
     long acc0 = 0, acc1 = 0, acc2 = 0, acc3 = 0;
     long length = elems;
     long limit = length - sx4;
-
     /* Combine 4 elements at a time */
     for (i = 0; i < limit; i += sx4) {
 	acc0 = acc0 + data[i];     

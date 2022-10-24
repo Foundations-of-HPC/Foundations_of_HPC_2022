@@ -192,4 +192,3 @@ double function2( int iarg1, int iarg2, char *sarg3, double darg1, double darg2,
   
   return 0.0;
 }
-
