@@ -115,7 +115,7 @@ int main(int argc, char **argv)
     {
 
   
-      idx_t row_nblocks = nrows / block_size - (ncols % block_size==0);                         // how many row-blocks there wiil be
+      idx_t row_nblocks = nrows / block_size - (nrows % block_size==0);                         // how many row-blocks there wiil be
       idx_t row_remind  = (nrows % block_size ? nrows - row_nblocks*block_size : block_size);   // account for a final block of
       //   smaller size
   

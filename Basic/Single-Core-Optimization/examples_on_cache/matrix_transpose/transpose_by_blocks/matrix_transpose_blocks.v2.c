@@ -62,7 +62,10 @@ int main(int argc, char **argv)
   int nrows      = (argc > 2 ? atoi(*(argv+2)) : ROWS_DFLT );        // get the number of rows
   int ncols      = (argc > 3 ? atoi(*(argv+3)) : COLUMNS_DFLT );     // get the numbr of columns
   int check      = (argc > 4 ? atoi(*(argv+4)) : 0 );                // about cheking the final matrix
-  
+
+
+  /* if ( block_size < 1 ) --> error; */
+  /* if ( block_size > nrows || block_size > ncols ) ---> error; */
 
   /*
    * allocate the memory
@@ -126,7 +129,7 @@ int main(int argc, char **argv)
       timing = CPU_TIME;
       PAPI_START_CNTR;
   
-      idx_t row_nblocks = nrows / block_size - (ncols % block_size==0);
+      idx_t row_nblocks = nrows / block_size - (nrows % block_size==0);
       idx_t row_remind  = (nrows % block_size ? nrows - row_nblocks*block_size : block_size);
       idx_t col_nblocks = ncols / block_size - (ncols % block_size==0);
       idx_t col_remind  = (ncols % block_size ? ncols - col_nblocks*block_size : block_size);

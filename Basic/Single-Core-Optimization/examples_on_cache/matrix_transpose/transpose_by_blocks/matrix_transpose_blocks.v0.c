@@ -76,7 +76,21 @@ int main(int argc, char **argv)
   int nrows      = (argc > 2 ? atoi(*(argv+2)) : ROWS_DFLT );        // get the number of rows
   int ncols      = (argc > 3 ? atoi(*(argv+3)) : COLUMNS_DFLT );     // get the numbr of columns
   int check      = (argc > 4 ? atoi(*(argv+4)) : 0 );                // about cheking the final matrix
+
+  if ( (nrows < 1) ||
+       (ncols < 1) )
+    {
+      printf( "both nrows and ncols should be larger than 0\n");
+      exit(1);
+    }
   
+  if ( (block_size < 1 ) ||
+       (block_size > nrows ) ||
+       (block_size > ncols ) )
+    {
+      printf( "block size should be >=1 and not larger of the minimum btw rows and cols\n" );
+      exit(1);
+    }
   
   /*
    * allocate the memory
@@ -143,7 +157,7 @@ int main(int argc, char **argv)
   else
     {
   
-      idx_t row_nblocks = nrows / block_size - (ncols % block_size==0);                         // how many row-blocks there wiil be
+      idx_t row_nblocks = nrows / block_size - (nrows % block_size==0);                         // how many row-blocks there wiil be
       idx_t row_remind  = (nrows % block_size ? nrows - row_nblocks*block_size : block_size);   // account for a final block of
       //   smaller size
       
