@@ -62,10 +62,16 @@ int main(int argc, char **argv)
   int nrows      = (argc > 2 ? atoi(*(argv+2)) : ROWS_DFLT );        // get the number of rows
   int ncols      = (argc > 3 ? atoi(*(argv+3)) : COLUMNS_DFLT );     // get the numbr of columns
   int check      = (argc > 4 ? atoi(*(argv+4)) : 0 );                // about cheking the final matrix
-  
+ //You should insert some checks
+ /*if (block_size < 1) --> error;
+  * if (block_size > nrows || block_size > ncols) ---> error; */ 
 
   /*
-   * allocate the memory
+   * allocate the memory - in this code we allocate the matrices as a continuous string
+   * 2 because its 2 matrixes, nrows*nclos is the number of cells we need per matrix
+   * the first matrix is pointing to the beginning of this region, while the second one is
+   * nrows*nclos adresses after (begginning of second continuous matrix)
+   * to access the ij element of the matrix I have to go to address ixncols + j after the beginning of the matrix
    */
   data_t *matrix  = (data_t*) calloc(2 * nrows*ncols, sizeof(data_t)); // the original matrix
   data_t *tmatrix = matrix + (nrows*ncols);                            // the transposed matrix
@@ -93,7 +99,7 @@ int main(int argc, char **argv)
       
       idx_t  offset = row*ncols;
       data_t value = (row << half_datat );
-
+	//Adding col is equivalent to doing an OR with col
       for ( idx_t col = 0; col < ncols; col++ )
 	matrix[ offset + col ] = value | col;      
     }
@@ -131,7 +137,7 @@ int main(int argc, char **argv)
       idx_t col_nblocks = ncols / block_size - (ncols % block_size==0);
       idx_t col_remind  = (ncols % block_size ? ncols - col_nblocks*block_size : block_size);
 
-
+	//The outermost loops loop over the blocks (first by rows and then my columns)
       for ( idx_t rb = 0; rb <= row_nblocks; rb++ )
 	{
 	  idx_t row_start = rb*block_size;

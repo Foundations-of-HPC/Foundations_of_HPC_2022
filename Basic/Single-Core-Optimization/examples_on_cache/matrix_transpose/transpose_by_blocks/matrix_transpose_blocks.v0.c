@@ -79,9 +79,11 @@ int main(int argc, char **argv)
   
   
   /*
-   * allocate the memory
+   * allocate the memory -  in this code we allocate it in with an array of pointers. We allocate nrows pointers, then each pointer
+   * points to an allocated row. Actually, the real matrix is continuous in memory because it is still allocated all together, THEN 
+   * the pointers are associated with the formal beginning of each block. The advantage is on the notation!! (See line 122 for example) 
    */
-  data_t **matrix  = (data_t**)malloc( (nrows+ncols)*sizeof(data_t*) );    // the original matrix
+  data_t **matrix  = (data_t**)malloc( 2*nrows*sizeof(data_t*) );    // the original matrix
   data_t **tmatrix = matrix + nrows;                                       // the transposed matrix
 
   /*

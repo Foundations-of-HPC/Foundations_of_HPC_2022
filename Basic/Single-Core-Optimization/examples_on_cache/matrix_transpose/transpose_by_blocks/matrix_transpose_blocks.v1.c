@@ -60,7 +60,10 @@ int main(int argc, char **argv)
 
   
   /*
-   * allocate the memory
+   * allocate the memory - since C99, the C standard implements some variable length array stuff. It's like a dynamical allocation
+   * in the stack (use with care, this is not a good usage unless we're sure that the array is small by design). Actually maybe the 
+   * following lines are allocating on the heap (as usual). Just try to understand it. Also in this version, we have a nice way of 
+   * accessing the matrix (like v0)
    */
   data_t (* matrix)[ncols]  = calloc( nrows*ncols, sizeof( *matrix  ) ); // the original matrix
   data_t (* tmatrix)[nrows] = calloc( nrows*ncols, sizeof( *tmatrix ) ); // the transposed matrix
