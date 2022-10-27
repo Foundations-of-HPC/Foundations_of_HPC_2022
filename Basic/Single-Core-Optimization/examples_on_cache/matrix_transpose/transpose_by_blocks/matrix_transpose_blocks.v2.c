@@ -66,6 +66,10 @@ int main(int argc, char **argv)
  /*if (block_size < 1) --> error;
   * if (block_size > nrows || block_size > ncols) ---> error; */ 
 
+
+  /* if ( block_size < 1 ) --> error; */
+  /* if ( block_size > nrows || block_size > ncols ) ---> error; */
+
   /*
    * allocate the memory - in this code we allocate the matrices as a continuous string
    * 2 because its 2 matrixes, nrows*nclos is the number of cells we need per matrix
@@ -132,7 +136,7 @@ int main(int argc, char **argv)
       timing = CPU_TIME;
       PAPI_START_CNTR;
   
-      idx_t row_nblocks = nrows / block_size - (ncols % block_size==0);
+      idx_t row_nblocks = nrows / block_size - (nrows % block_size==0);
       idx_t row_remind  = (nrows % block_size ? nrows - row_nblocks*block_size : block_size);
       idx_t col_nblocks = ncols / block_size - (ncols % block_size==0);
       idx_t col_remind  = (ncols % block_size ? ncols - col_nblocks*block_size : block_size);
