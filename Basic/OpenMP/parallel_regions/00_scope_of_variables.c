@@ -60,7 +60,7 @@ int main( int argc, char **argv )
 	  (void*)base_of_stack - (void*)&i,
 	  (void*)&i - (void*)top_of_stack );
   
-  // just try who is the private i for each thread
+  // just test who is the private i for each thread
 #pragma omp parallel private(i)
   {
     long int me = omp_get_thread_num();
