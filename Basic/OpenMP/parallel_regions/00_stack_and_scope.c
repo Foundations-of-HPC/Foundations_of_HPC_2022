@@ -74,17 +74,29 @@ int main( int argc, char **argv )
 	  "\tarray_p is at address %p\n",
 	  array_s, array_p );
 
-#pragma omp parallel
-#pragma omp master
-  nthreads = omp_get_num_threads();
+#pragma omp parallel 		//only one line
+#pragma omp master 		//Whatever is after this is executed only by the master region
+  nthreads = omp_get_num_threads();		//Will return the #threads inside the parallel
+						//region that called the functiona
+						//note that nthreads variable is shared
+						//NOTE: when we exit the threads, their stack is deleted
+						//just like it happens in normal functions.
 
+  //This is the serial region again
   printf("using %d threads\n", nthreads);
+  //Static allocation 
   size_t stack_base_addresses[ nthreads ];
   size_t stack_top_addresses[ nthreads ];
 
-  //
   // also prove who are the private i and array_p for each thread
-  //
+  // + fault sharing (?)
+  // We have 8 private bytes that will be used for the pointer array_p, 
+  // they will be 8 uninitialized garbage bytes. THEY ARE NOT A COPY
+  // OF THE VALUE OF array_p. The value of shared variables is not going to
+  // be copied in the private ones (there is actually a way to do it)a
+  // So a way to propagate information between threads is to write it
+  // to a shared region that will continue to exist after the threads
+  // are deleted.
  #pragma omp parallel private(i, array_p)
   {
     int me = omp_get_thread_num();
@@ -93,6 +105,10 @@ int main( int argc, char **argv )
     __asm__("mov %%rbp,%0" : "=mr" (my_stackbase));
     __asm__("mov %%rsp,%0" : "=mr" (my_stacktop));
 
+	//Note: me is different for every thread, so they will write in
+	//different locations of the SAME array.
+	//they are also printing the value of array_s and array_p that they see
+	//(the second one will be not initialized!!)
     stack_base_addresses[me] = my_stackbase;
     stack_top_addresses[me] = my_stacktop;
     

@@ -53,6 +53,8 @@ int main( int argc, char **argv )
     {
                                              // if no arguments are given,
                                              // tries to read the env variable
+					     // This reads an enviromental variable
+					     // to see env variables $env
       char *buffer = getenv("OMP_NUM_THREADS");
       if ( buffer != NULL )
 	threads_num = atoi( buffer );
@@ -61,6 +63,7 @@ int main( int argc, char **argv )
                                              // if OMP_NUM_THREADS is not defined,
 	                                     // reads the /proc/cpuinfo by opening
 	                                     // a pipe with a shell
+					     // we're getting the value of #processors
 	  FILE *pipe = popen("cat /proc/cpuinfo | grep processor | cut -d':' -f2 | tail -n1", "r");
 	  if ( pipe != NULL )
 	    {
@@ -78,6 +81,8 @@ int main( int argc, char **argv )
 
     }
 
+      /*Note: you can change the #threads only if OMP_DYNAMIC = TRUE
+       */
   if ( omp_get_dynamic( ) == 0 )
     {
       int max_allowed = omp_get_max_threads();

@@ -43,8 +43,14 @@ int main( int argc, char **argv )
 {
   int    i;
 
+  /* here there is no parallelism
+   */
   register unsigned long long base_of_stack asm("rbp");
   register unsigned long long top_of_stack asm("rsp");
+
+/* Here we're getting some information on the process
+ * SYS_gettid is the thread ID or process ID?
+ */
 
   printf( "\nmain thread (pid: %ld, tid: %ld) data:\n"
 	  "base of stack is: %p\n"
@@ -61,11 +67,23 @@ int main( int argc, char **argv )
 	  (void*)&i - (void*)top_of_stack );
   
   // just test who is the private i for each thread
+  // Here we're opening a parallel region.
+  /* Golden rule: whatever is defined outside of the parallel region
+   * is SHARED. But in this case we're saying that we want i to be private. The 
+   * default would be i is shared.
+   * There will be copies of the following parallel region for each thread
+   * We will be able to see the different addresses of the different stacks
+   * If a variable is shared, every thread will see the same address for it,
+   * otherwise it is private.
+   */
 #pragma omp parallel private(i)
   {
-    long int me = omp_get_thread_num();
+    long int me = omp_get_thread_num(); //This function returns the ID of the thread that is called -> same
+					//result as SYS_gettid
     unsigned long long my_stackbase;
-    __asm__("mov %%rbp,%0" : "=mr" (my_stackbase));
+    __asm__("mov %%rbp,%0" : "=mr" (my_stackbase)); //my_stackbase will be a variable in the stack. I
+						    // want to see its address so that I can prove each thread
+						    // has a different stack
     
     printf( "\tthread (tid: %ld) nr %ld:\n"
 	    "\t\tmy base of stack is %p ( %td from main\'s stack )\n",

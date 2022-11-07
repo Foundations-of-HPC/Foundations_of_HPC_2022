@@ -79,6 +79,7 @@ int main( int argc, char **argv )
 	   "i.e., if you give me an argument != 0 I'll show the dynamic\n"
 	   " extent of the parallel regions.\n\n");
 
+	//This is a vector of pointers to functions
   f_type *functions[3] = {heavy_work_0, heavy_work_1, heavy_work_2};
   
   double tstart = CPU_TIME;
