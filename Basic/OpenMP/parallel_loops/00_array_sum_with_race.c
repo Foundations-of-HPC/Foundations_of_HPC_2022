@@ -85,11 +85,17 @@ int main( int argc, char **argv )
   }
  #endif
 
-  // initialize the array
-  // srand48( time(NULL) );
+  // initialize the array with pseudo-random numbers
+  //
+  /* srand48( time(NULL) ); */
+  /* for ( int ii = 0; ii < N; ii++ ) */
+  /*   array[ii] = drand48(); */
+
+  // initialize the array with the first N integer nums
+  //
   for ( int ii = 0; ii < N; ii++ )                          // choose the initialization you prefer
     array[ii] = (double)ii;                                 // the one with integers make it easier
-    //array[ii] = drand48();                                // to verify the result
+                                                            // to verify the result
                                                             // otherwise you should initialize srand48
 							    // with a constant seed
 
