@@ -56,8 +56,8 @@ int main( int argc, char **argv )
 
 
   // just give notice of what will happen and get the number of threads used
-#pragma omp parallel
-#pragma omp master
+ #pragma omp parallel
+ #pragma omp master
   nthreads = omp_get_num_threads();
 
   printf("omp summation with %d threads\n", nthreads );
@@ -81,13 +81,13 @@ int main( int argc, char **argv )
 
   double S           = 0;                                   // this will store the summation
   
-#pragma omp parallel 
+ #pragma omp parallel 
   {
     int me      = omp_get_thread_num();
     int i, first = 1;
     
     printf("thread %d : &i is %p\n", me, &i);
-#pragma omp for reduction(+:S)                              
+   #pragma omp for reduction(+:S)                              
     for ( i = 0; i < N; i++ )
       {
 	if ( first ) {

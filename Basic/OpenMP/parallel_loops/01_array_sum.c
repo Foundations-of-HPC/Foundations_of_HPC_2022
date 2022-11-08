@@ -86,16 +86,16 @@ int main( int argc, char **argv )
     }
 
   // just give notice of what will happen and get the number of threads used
-#ifndef _OPENMP
+ #ifndef _OPENMP
   printf("serial summation\n");
-#else
-#pragma omp parallel
-#pragma omp master
+ #else
+ #pragma omp parallel
+ #pragma omp master
   nthreads = omp_get_num_threads();
-
+  
   printf("omp summation with %d threads\n", nthreads );
-#endif
-
+ #endif
+  
   double _tstart = CPU_TIME_th;
   // initialize the array
   for ( int ii = 0; ii < N; ii++ )
@@ -119,20 +119,20 @@ int main( int argc, char **argv )
 
   double tstart  = CPU_TIME;
   
-#if !defined(_OPENMP)
+ #if !defined(_OPENMP)
   
   for ( int ii = 0; ii < N; ii++ )                          // well, you may notice this implementation
     S += array[ii];                                         // is particularly inefficient anyway
 
-#else
+ #else
 
   
-#pragma omp parallel reduction(+:th_avg_time) \
+ #pragma omp parallel reduction(+:th_avg_time)				\
   reduction(min:th_min_time)                                // in this region there are 2 different
   {                                                         // reductions: the one of runtime, which
     struct  timespec myts;                                  // happens in the whole parallel region;
     double mystart = CPU_TIME_th;                           // and the one on S, which takes place  
-#pragma omp for reduction(+:S)                              // in the for loop.                     
+   #pragma omp for reduction(+:S)                              // in the for loop.                     
     for ( int ii = 0; ii < N; ii++ )
       S += array[ii];
 
@@ -140,7 +140,7 @@ int main( int argc, char **argv )
     th_min_time   = CPU_TIME_th - mystart;     
   }
 
-#endif
+ #endif
 
   double tend = CPU_TIME;                                   // this timer is CLOCK_REALTIME if OpenMP
 							    // is active; CLOCK_PROCESS_CPU_TIME_ID
@@ -153,7 +153,7 @@ int main( int argc, char **argv )
    *  -----------------------------------------------------------------------------
    */
 
-printf("Sum is %g, process took %g of wall-clock time\n\n"
+  printf("Sum is %g, process took %g of wall-clock time\n\n"
        "<%g> sec of avg thread-time\n"
        "<%g> sec of min thread-time\n",
        S, tend - tstart, th_avg_time/nthreads, th_min_time );

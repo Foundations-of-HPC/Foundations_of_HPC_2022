@@ -72,18 +72,18 @@ int main( int argc, char **argv )
     }
 
   // just give notice of what will happen and get the number of threads used
-#ifndef _OPENMP
+ #ifndef _OPENMP
   printf("serial summation\n");
-#else
-#pragma omp parallel
+ #else
+ #pragma omp parallel
   {
-#pragma omp master
+   #pragma omp master
     {
       nthreads = omp_get_num_threads();
       printf("omp summation with %d threads\n", nthreads );
     }
   }
-#endif
+ #endif
 
   // initialize the array
   // srand48( time(NULL) );

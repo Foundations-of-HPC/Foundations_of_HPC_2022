@@ -76,8 +76,8 @@ int main( int argc, char **argv )
 
 
   // just give notice of what will happen and get the number of threads used
-#pragma omp parallel
-#pragma omp master
+ #pragma omp parallel
+ #pragma omp master
   nthreads = omp_get_num_threads();
 
   printf("omp summation with %d threads\n", nthreads );
@@ -104,15 +104,15 @@ int main( int argc, char **argv )
   double tstart      = CPU_TIME;
   
  #pragma omp parallel for reduction(+:S)
-    for (int ii = 0; ii < N; ii++ )
-      S += array[ii];
-    
+  for (int ii = 0; ii < N; ii++ )
+    S += array[ii];
+  
   /*  -----------------------------------------------------------------------------
    *   finalize
    *  -----------------------------------------------------------------------------
    */
 
-    double tend = CPU_TIME;
+  double tend = CPU_TIME;
   printf("Sum is %g, process took %g of wall-clock time\n\n",
 	 S, tend - tstart );
   
