@@ -25,6 +25,14 @@
  * ────────────────────────────────────────────────────────────────────────── */
 
 
+/*
+ *  This code is equivalent to 01_array_sum.c but for the fact that
+ *  the reduction is implemented by hands instead of using the reduction()
+ *  clause
+ *
+ */
+
+
 #if defined(__STDC__)
 #  if (__STDC_VERSION__ >= 199901L)
 #     define _XOPEN_SOURCE 700
@@ -40,17 +48,21 @@
 #include <omp.h>
 
 
+
 #if defined(_OPENMP)
-#define CPU_TIME (clock_gettime( CLOCK_REALTIME, &ts ), (double)ts.tv_sec + \
-		  (double)ts.tv_nsec * 1e-9)
+#define CPU_TIME ({struct  timespec ts; clock_gettime( CLOCK_REALTIME, &ts ),\
+					  (double)ts.tv_sec +		\
+					  (double)ts.tv_nsec * 1e-9;})
 
-#define CPU_TIME_th (clock_gettime( CLOCK_THREAD_CPUTIME_ID, &myts ), (double)myts.tv_sec +	\
-		     (double)myts.tv_nsec * 1e-9)
-
+#define CPU_TIME_th ({struct  timespec myts; clock_gettime( CLOCK_THREAD_CPUTIME_ID, &myts ),\
+					     (double)myts.tv_sec +	\
+					     (double)myts.tv_nsec * 1e-9;})
 #else
 
-#define CPU_TIME (clock_gettime( CLOCK_PROCESS_CPUTIME_ID, &ts ), (double)ts.tv_sec + \
-		  (double)ts.tv_nsec * 1e-9)
+#define CPU_TIME ({struct  timespec ts; clock_gettime( CLOCK_PROCESS_CPUTIME_ID, &ts ),\
+					  (double)ts.tv_sec +		\
+					  (double)ts.tv_nsec * 1e-9;})
+
 #endif
 
 #define N_default 100
@@ -62,8 +74,6 @@ int main( int argc, char **argv )
   unsigned long long int N = N_default;
   int     nthreads = 1;  
   double *array;
-
-  struct  timespec ts;
 
   /*  -----------------------------------------------------------------------------
    *   initialize 

@@ -24,6 +24,14 @@
  │                                                                            │
  * ────────────────────────────────────────────────────────────────────────── */
 
+/*
+ *  This code is equivalent to 01_array_sum.c but for the fact
+ *  the it prints the value of the loop counter at the first iteration
+ *  of every thread; in this way you can spy how the iteration space
+ *  is subdivided with a simple #pragma omp for
+ *
+ */
+
 
 #if defined(__STDC__)
 #  if (__STDC_VERSION__ >= 199901L)
@@ -36,22 +44,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 #include <omp.h>
 
-
-#if defined(_OPENMP)
-#define CPU_TIME (clock_gettime( CLOCK_REALTIME, &ts ), (double)ts.tv_sec + \
-		  (double)ts.tv_nsec * 1e-9)
-
-#define CPU_TIME_th (clock_gettime( CLOCK_THREAD_CPUTIME_ID, &myts ), (double)myts.tv_sec +	\
-		     (double)myts.tv_nsec * 1e-9)
-
-#else
-
-#define CPU_TIME (clock_gettime( CLOCK_PROCESS_CPUTIME_ID, &ts ), (double)ts.tv_sec + \
-		  (double)ts.tv_nsec * 1e-9)
-#endif
 
 #define N_default 100
 
@@ -59,20 +53,14 @@
 int main( int argc, char **argv )
 {
 
-  unsigned long long int N = N_default;
+  int     N        = N_default;
   int     nthreads = 1;  
   double *array;
-
-  struct  timespec ts;
 
   /*  -----------------------------------------------------------------------------
    *   initialize 
    *  -----------------------------------------------------------------------------
    */
-
-  // check whether some arg has been passed on
-  if ( argc > 1 )
-    N = (unsigned long long int)atoll( *(argv+1) );
 
 
   // just give notice of what will happen and get the number of threads used
@@ -85,8 +73,7 @@ int main( int argc, char **argv )
   // allocate memory
   if ( (array = (double*)calloc( N, sizeof(double) )) == NULL )
     {
-      printf("I'm sorry, there is not enough memory to host %llu bytes\n",
-	     N * sizeof(double) );
+      printf("I'm sorry, there is not enough memory to host %lu bytes\n", N * sizeof(double) );
       return 1;
     }
   // initialize the array
@@ -101,20 +88,29 @@ int main( int argc, char **argv )
 
 
   double S           = 0;                                   // this will store the summation
-  double tstart      = CPU_TIME;
   
- #pragma omp parallel for reduction(+:S)
-  for (int ii = 0; ii < N; ii++ )
-    S += array[ii];
+ #pragma omp parallel 
+  {
+    int me      = omp_get_thread_num();
+    int i, first = 1;
+    
+    printf("thread %d : &i is %p\n", me, &i);
+   #pragma omp for reduction(+:S)                              
+    for ( i = 0; i < N; i++ )
+      {
+	if ( first ) {
+	  printf("\tthread %d : &loopcounter is %p\n", me, &i); first = 0;}
+	S += array[i];
+      }    
+  }
   
+
   /*  -----------------------------------------------------------------------------
    *   finalize
    *  -----------------------------------------------------------------------------
    */
 
-  double tend = CPU_TIME;
-  printf("Sum is %g, process took %g of wall-clock time\n\n",
-	 S, tend - tstart );
+  printf("Sum is %g\n\n", S );
   
   free( array );
   
