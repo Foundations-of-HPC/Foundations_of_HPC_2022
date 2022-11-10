@@ -81,7 +81,7 @@ int main( int argc, char **argv )
 	// inside the for loop last_time is private
 	// (better to use a small N in this case)
 	// 
-	/* printf(" + thread %d, iter %d: last_time (at %p) is %g\n", me, j, &last_time, last_time); */
+	printf(" + thread %d, iter %d: last_time (at %p) is %g\n", me, j, &last_time, last_time);
 
 	// !! NOTE !!
 	// drand48() is not a re-entrant function, meaning that it is NOT thread-safe
@@ -92,7 +92,7 @@ int main( int argc, char **argv )
       }
   }
 
-  printf("\nthe last valid reception %g happened at %g\n", data, last_time);
+/*  printf("\nthe last valid reception %g happened at %g\n", data, last_time);*/
   return 0;
 }
 

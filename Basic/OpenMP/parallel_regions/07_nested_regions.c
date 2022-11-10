@@ -38,7 +38,13 @@
 #include <string.h>
 #include <unistd.h>
 #include <omp.h>
-
+/* Try to modify the environmental varible by writing
+ * $ export OMP_NESTED=TRUE
+ *
+ * also
+ * $ export OMP_NUM_THREADS=2,4
+ *
+ */
 
 int main( int argc, char **argv )
 {

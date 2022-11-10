@@ -73,7 +73,8 @@ int main( int argc, char **argv )
   memset( min_timings, 0, 3*sizeof(double));
   
   // ----------------------------------------------------- constant work
- #pragma omp parallel 
+	//The amount of work for every call of heavy_work is constant
+#pragma omp parallel 
   {
     int myid = omp_get_thread_num();
     double tstart, tend;
@@ -121,7 +122,9 @@ int main( int argc, char **argv )
 
 
   // ----------------------------------------------------- increasing work  
-
+//Here the last iterations are much heavier than the first ones,
+//because the argument of heavy_work is "i"
+//Here we expect the static version to be worse in performance
   memset( timings, 0, 3*nthreads*sizeof(double));
   memset( min_timings, 0, 3*sizeof(double));
 

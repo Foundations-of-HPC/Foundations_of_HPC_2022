@@ -39,17 +39,16 @@
 
 int main( int argc, char **argv )
 {
-  
   int  i = (argc > 1 ? atoi(*(argv+1)) : DEFAULT );
   int  nthreads;
   int *array;
-
+ 
  #pragma omp parallel
  #pragma omp master
   nthreads = omp_get_num_threads();
-
-  array = (int*)calloc( nthreads, sizeof(int) );
   
+  array = (int*)calloc( nthreads, sizeof(int) ); //Why is this line only
+		printf("Test\n");				 //executed once?
  #pragma omp parallel firstprivate( i, array )
   {
     int me = omp_get_thread_num();

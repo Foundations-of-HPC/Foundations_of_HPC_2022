@@ -57,14 +57,18 @@ int main( int argc, char **argv )
 
   int nthreads           = 1;
   int nthreads_requested = 1;
-  
-
+  /*****************************************************
+   * see video of lesson on 9/11/22
+   ******************************************************
+   */
+//we require the #threads as an argument
   if ( argc > 1 )
     nthreads_requested = atoi( *(argv+1) );
 
   if ( nthreads_requested > 1 )
     omp_set_num_threads( nthreads_requested ); 
-
+//Getting values of environmental variables
+//if the return is NULL, the variable is not defined
   char *places = getenv("OMP_PLACES");
   char *bind   = getenv("OMP_PROC_BIND");
   if ( places != NULL )
@@ -86,7 +90,7 @@ int main( int argc, char **argv )
     // we use critical only for having not-interleaved lines of output
     printf("thread %2d is running on core %2d\n", me, get_cpu_id() );
 
-   #pragma omp barrier
+   #pragma omp barrier //For synchronization
 
    #ifdef SPY
     // if you compile with -DSPY then you can inspect what
