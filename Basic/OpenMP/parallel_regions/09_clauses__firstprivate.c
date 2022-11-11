@@ -44,9 +44,12 @@ int main( int argc, char **argv )
   int *array;
  
  #pragma omp parallel
+  printf("*************TEST PRINT OUTSIDE***************\n");
  #pragma omp master
+ // {
   nthreads = omp_get_num_threads();
-  
+ // }
+  printf("*************TEST PRINT***************\n");
   array = (int*)calloc( nthreads, sizeof(int) ); //Why is this line only
 		printf("Test\n");				 //executed once?
  #pragma omp parallel firstprivate( i, array )
