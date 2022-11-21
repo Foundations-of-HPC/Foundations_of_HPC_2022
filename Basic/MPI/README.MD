@@ -9,7 +9,7 @@ A collection of materials/references for the MPI lectures
  - lecture 5: [MPI programming part1 ](lecture05-MessagePassing-and-MPI-Programming.pdf)
  
  
- - lecture 6: [MPI programming part2 ]()
+ - lecture 6: [MPI programming part2 ](lecture06-Collective-MPI-mpi.pdf)
  - lecture 7: [Network basic for MPI applications]()
  - lecture 8: [Domain decomposition with MPI]()
  - lecture 9: [MPI libraries on ORFEO ](l)
