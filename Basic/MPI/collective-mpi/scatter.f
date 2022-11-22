@@ -14,7 +14,7 @@
         END IF
         nsnd = 2
         CALL MPI_SCATTER(a, nsnd, MPI_REAL, b, nsnd,
-       & MPI_REAL, root, MPI_COMM_WORLD, ierr)
+     & MPI_REAL, root, MPI_COMM_WORLD, ierr)
         WRITE(6,*) myid, ': b(1)=', b(1), 'b(2)=', b(2)
         CALL MPI_FINALIZE(ierr)
-        END
+       END
