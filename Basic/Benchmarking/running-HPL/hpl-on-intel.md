@@ -1,6 +1,6 @@
 # HPL benchmark using MKL multithread library
 
-The aim of this exercise is to compile the hpl benchmark against the mkl libraries and to tune it in order to get close to the theoretical peak performance of a node of the Ulysses cluster.
+The aim of this tutorial is to compile the hpl benchmark against the mkl libraries and to tune it in order to get close to the theoretical peak performance of a thin node on ORFEO.
 Exercise could also be performed on personal laptop/desktop and/or any computational resource you may have access.
 
 ## First part: Downloading and installing  HPL
@@ -101,20 +101,31 @@ LINKER       = mpicc
 ```
 
 Done this we can start compiling after loading the appropriate modules: 
-For the ORFEO cluster we need to do the following: 
+For the ORFEO cluster on thin node we need to do the following: 
 
 ```
- module load intel/20.1 
- make arch=Linux_Intel64 
+salloc -n1 -t 1:00:00 -p THIN
 ```
+and then load appropriate modules:
 
-And finally we will find the executable in ` TOPDIR/bin/Linux_Intel64/` 
+```
+module load architecture/Intel
+module load openMPI/4.1.4/gnu
+module load mkl/2022.2.1
+```
+and then 
+```
+srun make arch=thin
+
+``` 
+
+And finally we will find the executable in ` TOPDIR/bin/thin/` 
 We are now ready to play with it.
     
 
 ## Things  to do:
 
-1.Get a GPU node and run 48 core as 48 mpi processes the xhpl program and finds out the right combination
+1.Get a thin node and run 24 core as 24 mpi processes the xhpl program and finds out the right combination
 in term of N(size of the problem)  Nb (block size)  P and Q  (grid of the MPI processes) 
 that allows you to get at least 75% of peak performance..
 For an initial guess of them here a simple online calculator:
@@ -158,31 +169,99 @@ HPL.out      output file name (if any)
 ```
 
 
-2. Try to run the highly optimized version of HPL which Intel provides precompiled: 
+### 2 Running HPL benchmark
 
-You should find it in the following location: 
+**2.1.** Run HPL-OpenBlas with OpenMPI using 24 MPI processs on a thin node. The objective is to find out the right combination of parameters N, NB, P and Q, to set in the following input file that which maximizes the effective/real performance. Results should be expressed as a percentage of the theoretical peak performance. 
+
+The input file goes this way:
 
 ```
-  $MKLROOT/benchmarks/linpack
+This two lines are 
+just for comments
+HPL.out      output file name (if any)
+6            device out (6=stdout,7=stderr,file)
+1            # of problems sizes (N)    #<<<<<<<<<<<<<<<<<<<<
+16384        Ns                         #<<<<<<<<<<<<<<<<<<<<
+1            # of NBs                   #<<<<<<<<<<<<<<<<<<<<
+176          NBs                        #<<<<<<<<<<<<<<<<<<<<
+0            PMAP process mapping (0=Row-,1=Column-major)
+1            # of process grids (P x Q) #<<<<<<<<<<<<<<<<<<<<
+6            Ps                         #<<<<<<<<<<<<<<<<<<<<
+4            Qs                         #<<<<<<<<<<<<<<<<<<<<
+16.0         threshold
+1            # of panel fact
+0 1 2        PFACTs (0=left, 1=Crout, 2=Right)
+1            # of recursive stopping criterium
+2 8          NBMINs (>= 1)
+1            # of panels in recursion
+2            NDIVs
+1            # of recursive panel fact.
+0 1 2        RFACTs (0=left, 1=Crout, 2=Right)
+1            # of broadcast
+0 2          BCASTs (0=1rg,1=1rM,2=2rg,3=2rM,4=Lng,5=LnM)
+1            # of lookahead depth
+1 0          DEPTHs (>=0)
+1            SWAP (0=bin-exch,1=long,2=mix)
+192          swapping threshold
+1            L1 in (0=transposed,1=no-transposed) form
+1            U  in (0=transposed,1=no-transposed) form
+1            Equilibration (0=no,1=yes)
+8            memory alignment in double (> 0)
 ```
+For an initial guess of them here a simple online calculator:
 
+http://www.advancedclustering.com/act_kb/tune-hpl-dat-file/
+
+
+**Tips:**
+
+- NB recommended setting for skylake architecture is 348 (you could try others but in that range)
+- N should be a multiple of NB
+- The problem is of size N<sup>2</sup>. Double check that it fits in memory (764 GB for a thin node).
+- Remember that time to solution scales with Nsup>3</sup> ! 
+- P x Q  must be equal to the number of MPI processes
+
+
+
+**2.2.** Using the sets of parameters found in the previous exercise rerun HPL using a hybrid approach: MPI + OpenMP.
+
+Prepare HPL.dat file to run the following combinations:
+
+<table style="width:30%">  <tr>
+    <th>MPI Processes</th>
+    <th>OMP threads</th>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>12</td>
+  </tr>
+</table>
+
+**Tips:** 
+
+* OMP threads can be set exporting the variable OMP_NUM_THREADS
+
+* Remember that MPI processes = P x Q 
+
+**2.3.** HPL - MKL vs Intel Optimized Version 
+
+Repeat the previous exercise but using Intel's version of the HPL benchmark:
+
+`$MKL_ROOT/benchmarks/mp_linpack/ xhpl_intel64_dynamic`
+
+Compare results with the ones obtained in the previous exercise.
 Once identify the executable try to run it with the best combination you obtained in point 1. 
 
-3. Compare and comment performance you obtained with the two different executable
+**2.4.** HPL - multinode version 
 
-4.Prepare a set of different HPL.dat file to run the hpl benchmark compiled by you using the following combinations; for each case remember to set correctly the  `OMP_NUM_THREADS` variable
+Try to run the benchmark using more than one nodes (i.e. 48 cores on two nodes) and see which kind of performance are you able to obtain. Comment the result you obtained..
 
-  MPI processes | Threads
-  --- | --- 
- 48 | 1
- 24 | 2 
- 12 | 4 
- 6  | 8 
- 2  | 24
- 1  | 48 
-
-5.Collect numbers you obtained, plot (if needed) them and prepare a short report comparing peak performance against the performance you obtained. 
-
-6.(optional): Try to run the benchmark using more than one nodes (i.e. 96 cores on two nodes) and see which kind of performance are you able to obtain. Comment the result you obtained..
-
-  Hints: on a larger number of processors you have to enlarge N (size of the problem) and P&Q  while you may keep Nb costant...
+Hints: on a larger number of processors you have to enlarge N (size of the problem) and P&Q  while you may keep Nb costant...
