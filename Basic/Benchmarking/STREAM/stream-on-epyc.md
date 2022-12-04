@@ -1,6 +1,6 @@
 # Memory bandwith benchmarking with STREAM
 
-## Preliminaries: inspect ORFEO hardware
+## Preliminaries: inspect ORFEO EPYC hardware
 
 This tutorial will dig into RAM performances of EPYC nodes.
 
