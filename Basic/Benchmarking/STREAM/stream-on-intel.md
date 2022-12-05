@@ -30,34 +30,62 @@ For the benchmark to work correctly you need to [adjust the problem size](http:/
 
     **Tip:**  you can check the L3 cache size using the command `lscpu`
 
- 3. To compile run the following commands:
+ 3. To compile on an Intel node run the following commands:
 
     ```
-    module load gnu
+    srun -N1 --exclusive -p THIN --time=1:0:0  --pty bash
+    module load architecture/Intel
+    module load icc
+  
     cd STREAM
     make all
+    gcc -O2 -fopenmp  -DSTREAM_ARRAY_SIZE=800000000 -DNTIMES=20 -mcmodel=medium   -c -o mysecond.o mysecond.c
+    gcc -O2 -fopenmp  -DSTREAM_ARRAY_SIZE=800000000 -DNTIMES=20 -mcmodel=medium -c mysecond.c
+    gfortran -O2 -fopenmp -c stream.f
+    gfortran -O2 -fopenmp stream.o mysecond.o -o stream_f.exe
+     gcc -O2 -fopenmp  -DSTREAM_ARRAY_SIZE=800000000 -DNTIMES=20 -mcmodel=medium stream.c -o stream_c.exe
+    
     ```
+    
+  You can then also compile an optimized version using the icc compiler: 
+   
+   ```
+    make stream.icc
+icc -O3 -xCORE-AVX2 -ffreestanding -qopenmp -DSTREAM_ARRAY_SIZE=80000000 -DNTIMES=20 stream.c -o stream.omp.AVX2.80M.20x.icc
+icc: remark #10441: The Intel(R) C++ Compiler Classic (ICC) is deprecated and will be removed from product release in the second half of 2023. The Intel(R) oneAPI DPC++/C++ Compiler (ICX) is the recommended compiler moving forward. Please transition to use this compiler. Use '-diag-disable=10441' to disable this message.
 
+ ```
+ 
+ In your STREAM folder you should find the following executables to play with:
+ 
+ ```
+-rwxr-xr-x 1 cozzini area 31456 Dec  5 08:54 stream_f.exe
+-rwxr-xr-x 1 cozzini area 30456 Dec  5 08:54 stream_c.exe
+-rwxr-xr-x 1 cozzini area 42800 Dec  5 08:54 stream.omp.AVX2.80M.20x.icc
+```
+ 
+   
     
 
 ### 2. Measure memory bandwidth
 
 **2.1** STREAM is a really fast benchmark so to run it you can simply ask a job in interactive mode:
 
-`srun -N1 --exclusive -p THIN --time=1:0:0 --mem=50G --pty bash`
+`srun -N1 --exclusive -p THIN --time=1:0:0 --pty bash`
 
 To measure the full node memory bandwidth you need ask for all 24 processors (on a thin node).
+
+
+
+**2.2** the naive way 
 
 To run the test simply run the executable:
 
 `./stream_c.exe`
 
-**2.2** the naive way 
-
-We can now run the Intel code compiled using openMP as it is:
 
 ``` 
-[cozzini@ct1pt-tnode006 stream]$ ./stream_intel_omp.x
+[cozzini@ct1pt-tnode006 stream]$ ./stream_c.exe
 -------------------------------------------------------------
 STREAM version $Revision: 5.10 $
 -------------------------------------------------------------
@@ -91,7 +119,7 @@ We use in this case likwid-pin utily but other choices are also available.
 Numbers are now stable and increases considerably as well:
 
 ```
-[cozzini@ct1pt-tnode006 stream]$ likwid-pin -c N:0-23 ./stream_intel_omp.x
+[cozzini@ct1pt-tnode006 stream]$ likwid-pin -c N:0-23 ./stream_c.exe
 -------------------------------------------------------------
 STREAM version $Revision: 5.10 $
 -------------------------------------------------------------
