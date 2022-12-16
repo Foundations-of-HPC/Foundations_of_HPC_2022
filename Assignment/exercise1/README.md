@@ -21,9 +21,11 @@ The game itself has several exciting properties and pertains to a very interesti
 
 You are required to provide a scalability study:
 
-- OpenMP scalability: fix the number of MPI tasks to 1 per socket, and report the behaviour of the code when you increase the number of threads per task from 1 up to the number of cores present on the socket;
+- *OpenMP scalability*: fix the number of MPI tasks to 1 per socket, and report the behaviour of the code when you increase the number of threads per task from 1 up to the number of cores present on the socket;
 
-- Strong MPI scalability: given a fixed size (you may opt for several increasing sizes ) show the run-time behaviour when you increase the number of MPI tasks (use as many nodes as possible, depending on the machine you run on).
+- *Strong MPI scalability*: given a fixed size (you may opt for several increasing sizes ) show the run-time behaviour when you increase the number of MPI tasks (use as many nodes as possible, depending on the machine you run on);
+
+- *Weak MPI scalability*: given an initial size, show to run-time behaviour when you scale up from 1 socket (saturated with OpenMP threads) up to as many sockets you can keeping fixed the workload per MPI task. 
 
 FILES:
 - `Assignment_exercise1.pdf` : the complete text of the exercise
