@@ -17,6 +17,14 @@ _Luca Tornatore_   `luca.tornatore at inaf.it`
 You’ll be prompted to implement a parallel version of a variant of the famous Conway’s “_game of life_” ( references: [1](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life), [2](https://conwaylife.com/) ), that is cellular automaton which plays autonomously on a infinite 2D grid.
 The game itself has several exciting properties and pertains to a very interesting field, but we leave to the readers going deeper into it at will.
 
+## Addition to the v1.0 of the text
+
+You are required to provide a scalability study:
+
+- OpenMP scalability: fix the number of MPI tasks to 1 per socket, and report the behaviour of the code when you increase the number of threads per task from 1 up to the number of cores present on the socket;
+
+- Strong MPI scalability: given a fixed size (you may opt for several increasing sizes ) show the run-time behaviour when you increase the number of MPI tasks (use as many nodes as possible, depending on the machine you run on).
+
 FILES:
 - `Assignment_exercise1.pdf` : the complete text of the exercise
 - `read_write_pgm_image.c` : and example showiung how to read and write a pgm image file
