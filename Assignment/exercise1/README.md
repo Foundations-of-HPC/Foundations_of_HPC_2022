@@ -12,12 +12,12 @@ _Luca Tornatore_   `luca.tornatore at inaf.it`
 
 ------
 
-### Game of Life
+## Game of Life
 
 You’ll be prompted to implement a parallel version of a variant of the famous Conway’s “_game of life_” ( references: [1](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life), [2](https://conwaylife.com/) ), that is cellular automaton which plays autonomously on a infinite 2D grid.
 The game itself has several exciting properties and pertains to a very interesting field, but we leave to the readers going deeper into it at will.
 
-## Addition to the v1.0 of the text
+### Addition to the v1.0 of the text
 
 You are required to provide a scalability study:
 
