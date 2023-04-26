@@ -66,6 +66,5 @@ int main( void )
       // set; multiplying  by 256 (i.e. bit-shifting by 8 positions) we move that bit
       // to he next byte.
     }
-
   return 0;
 }
