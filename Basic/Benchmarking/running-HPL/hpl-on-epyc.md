@@ -80,6 +80,33 @@ And build your software after module load:
  ```
  
  You can find the executables at: `./bin/epyc`.
+
+### SLURM script
+
+Since large matrix require a lot of runtime is usefull to run HPL using a script and submit it and wait for the results.
+Once the the HPL is compiled and linked, write the correct appfile (if running an hybrid benchmark) and setup a bash script to submit:
+
+**run.sh**
+```
+#!/bin/bash
+#SBATCH --partition=FHPC
+#SBATCH --job-name=my_big_HPL
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node 128
+#SBATCH --mem=490G
+#SBATCH --time=02:00:00
+
+
+module load architecture/AMD
+module load openMPI/4.1.4/gnu
+module load openBLAS/0.3.21-omp
+
+export codes=/u/path_to/hpl-2.3/bin/epyc
+
+mpirun -np 128 --map-by core $codes/xhpl
+```
+
+Send it to the scheduler with `sbatch run.sh`
  
  ## HPL.dat
  
