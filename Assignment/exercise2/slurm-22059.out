@@ -1,0 +1,7 @@
+Loading modules
+Loading mkl version 2022.2.1
+Loading tbb version 2021.7.1
+Loading compiler-rt version 2022.2.1
+rm: cannot remove 'counter.txt': No such file or directory
+Running executables...
+Finished.

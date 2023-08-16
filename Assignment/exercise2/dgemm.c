@@ -37,7 +37,7 @@
 #define GEMMCPU cblas_dgemm
 #endif
 
-
+//needed to print hostname
 #include <unistd.h>
 
 struct timespec diff(struct timespec start, struct timespec end)
@@ -56,7 +56,7 @@ struct timespec diff(struct timespec start, struct timespec end)
 
 int main(int argc, char** argv)
 {
-
+	//Printing hostname of machine
     char hostname[256];
 
     if (gethostname(hostname, sizeof(hostname)) == 0) {
@@ -66,8 +66,14 @@ int main(int argc, char** argv)
         return 1;
     }
 
+    //Reading arguments file, line by line
+    FILE *file = fopen("arguments.txt", "r");
 
+    if(file == NULL){
 
+	perror("Error opening arguments file");
+	return 1;
+    }
 
     MYFLOAT *A, *B, *C;
     int m, n, k, i, j;
@@ -76,22 +82,17 @@ int main(int argc, char** argv)
     double elapsed;
     if (argc == 1)
     {
-    m = 2000, k = 200, n = 1000;
+    	m = 2000, k = 200, n = 1000;
+	printf("Using default values for m,k and n.\n");
     }
-    	else if (argc == 4)
-    {
-        m = atoi(argv[1]);
-        k = atoi(argv[2]);
-        n = atoi(argv[3]);
-    }
-    else
-    {
-    	printf( "Usage: %s M K N, the corresponding matrices will be  A(M,K) B(K,N) \n", argv[0]); 
-	return 0; 
-    }
+     
+	int num;
+	while (fscanf(file, "%d", &num) == 1) {
+	m = num; n = m; k = m;
+   	printf("Currently doing  %i\n", m);
 
 
-    printf ("\n This example computes real matrix C=alpha*A*B+beta*C using \n"
+	printf ("\n This example computes real matrix C=alpha*A*B+beta*C using \n"
             " BLAS function dgemm, where A, B, and  C are matrices and \n"
             " alpha and beta are scalars\n\n");
 
@@ -165,6 +166,8 @@ int main(int argc, char** argv)
     free(A);
     free(B);
     free(C);
+    }
 
+    fclose(file);
     return 0;
 }
