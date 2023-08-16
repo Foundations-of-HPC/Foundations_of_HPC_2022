@@ -37,6 +37,9 @@
 #define GEMMCPU cblas_dgemm
 #endif
 
+
+#include <unistd.h>
+
 struct timespec diff(struct timespec start, struct timespec end)
 {
         struct timespec temp;
@@ -53,6 +56,19 @@ struct timespec diff(struct timespec start, struct timespec end)
 
 int main(int argc, char** argv)
 {
+
+    char hostname[256];
+
+    if (gethostname(hostname, sizeof(hostname)) == 0) {
+        printf("Running on host: %s\n", hostname);
+    } else {
+        perror("gethostname");
+        return 1;
+    }
+
+
+
+
     MYFLOAT *A, *B, *C;
     int m, n, k, i, j;
     MYFLOAT alpha, beta;
@@ -62,7 +78,7 @@ int main(int argc, char** argv)
     {
     m = 2000, k = 200, n = 1000;
     }
-    else if (argc == 4)
+    	else if (argc == 4)
     {
         m = atoi(argv[1]);
         k = atoi(argv[2]);
@@ -70,8 +86,8 @@ int main(int argc, char** argv)
     }
     else
     {
-    printf( "Usage: %s M K N, the corresponding matrices will be  A(M,K) B(K,N) \n", argv[0]); 
-    return 0; 
+    	printf( "Usage: %s M K N, the corresponding matrices will be  A(M,K) B(K,N) \n", argv[0]); 
+	return 0; 
     }
 
 
@@ -89,11 +105,11 @@ int main(int argc, char** argv)
     B = (MYFLOAT *)malloc( k*n*sizeof( MYFLOAT ));
     C = (MYFLOAT *)malloc( m*n*sizeof( MYFLOAT ));
     if (A == NULL || B == NULL || C == NULL) {
-      printf( "\n ERROR: Can't allocate memory for matrices. Aborting... \n\n");
-      free(A);
-      free(B);
-      free(C);
-      return 1;
+     	printf( "\n ERROR: Can't allocate memory for matrices. Aborting... \n\n");
+     	free(A);
+     	free(B);
+     	free(C);
+     	return 1;
     }
 
     for (i = 0; i < (m*k); i++) {
