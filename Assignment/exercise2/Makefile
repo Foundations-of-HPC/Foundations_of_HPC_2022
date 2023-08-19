@@ -11,10 +11,10 @@ OPENBLASROOT=${OPENBLAS_ROOT}
 cpu: gemm_mkl.x gemm_oblas.x #gemm_blis.x
 
 
-gemm_mkl.x: gemm.c
+gemm_mkl.x: dgemm.c
 	gcc -DUSE_DOUBLE -DMKL $^ -m64 -I${MKLROOT}/include $(MKL)  -o $@
 
-gemm_oblas.x: gemm.c
+gemm_oblas.x: dgemm.c
 	gcc -DUSE_DOUBLE -DOPENBLAS $^ -m64 -I${OPENBLASROOT}/include -L/${OPENBLASROOT}/lib -lopenblas -lpthread -o $@ -fopenmp
 
 #gemm_blis.x: gemm.c
