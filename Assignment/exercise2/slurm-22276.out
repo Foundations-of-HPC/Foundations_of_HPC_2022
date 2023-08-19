@@ -1,0 +1,47 @@
+Loading modules
+Loading mkl version 2022.2.1
+Loading tbb version 2021.7.1
+Loading compiler-rt version 2022.2.1
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 15: output-mkl: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 16: output-oblas: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 15: output-mkl: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 16: output-oblas: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 15: output-mkl: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 16: output-oblas: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 15: output-mkl: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 16: output-oblas: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 15: output-mkl: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 16: output-oblas: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 15: output-mkl: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 16: output-oblas: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 15: output-mkl: command not found
+Error opening arguments file: No such file or directory
+srun: error: epyc005: task 0: Exited with exit code 1
+/var/spool/slurm/d/job22276/slurm_script: line 16: output-oblas: command not found
+Finished
