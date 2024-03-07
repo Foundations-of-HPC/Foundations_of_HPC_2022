@@ -91,7 +91,7 @@ int main ( int argc, char **argv )
 	 "My RBP points to %p\n"
 	 "My RSP points to %p\n"
 	 "\n(*) the stack has not changed because the compiler\n"
-	 "    already knew about these latter variales\n\n",
+	 "    already knew about these latter variables\n\n",
 	 (void*)myRBP, (void*)myRSP );
 
   
