@@ -1,0 +1,6 @@
+BLIS matrix scaling
+********************************
+Loading modules
+Iteration 2000
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 378359 ON epyc002 CANCELLED AT 2024-03-06T16:07:11 ***

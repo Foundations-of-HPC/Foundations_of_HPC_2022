@@ -1,0 +1,8 @@
+MKL core scaling
+********************************
+Loading modules
+Loading mkl version 2022.2.1
+Loading tbb version 2021.7.1
+Loading compiler-rt version 2022.2.1
+Initiated csv file
+/var/spool/slurm/d/job378613/slurm_script: line 42: syntax error: unexpected end of file

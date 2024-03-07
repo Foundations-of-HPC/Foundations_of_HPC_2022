@@ -1,9 +1,0 @@
-Loading modules
-Removing mkl version 2022.2.1
-Use `module list` to view any remaining dependent modules.
-Loading mkl version 2022.2.1
-srun: error: epyc004: task 0: Out Of Memory
-slurmstepd: error: Detected 1 oom-kill event(s) in StepId=22308.0. Some of your processes may have been killed by the cgroup out-of-memory handler.
-srun: error: epyc004: task 0: Out Of Memory
-slurmstepd: error: Detected 1 oom-kill event(s) in StepId=22308.1. Some of your processes may have been killed by the cgroup out-of-memory handler.
-Finished
